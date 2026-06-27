@@ -393,16 +393,7 @@ select:focus { border-color: var(--g3); }
     </div>
   </div>
 
-  <!-- 학생별 랭킹 -->
-  <div class="card">
-    <div class="sec-row">
-      <span class="sec-title">🏆 학생별 랭킹</span>
-      <button class="btn-sm" onclick="loadSummary()">↻ 새로고침</button>
-    </div>
-    <div id="rank-list">
-      <div class="empty"><div class="empty-icon">🏅</div>아직 기록이 없어요</div>
-    </div>
-  </div>
+
 
 </div><!-- /wrap -->
 
@@ -610,6 +601,7 @@ async function loadFromSheet() {
 
 async function loadSummary() {
   const list = document.getElementById("rank-list");
+  if (!list) return;
   list.innerHTML = '<div class="empty"><div class="spinner"></div> 불러오는 중...</div>';
   try {
     const res  = await fetch(SCRIPT_URL + "?action=summary");
