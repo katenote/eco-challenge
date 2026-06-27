@@ -1,615 +1,927 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>🌍 에코 챌린지</title>
-<style>
-/* ─── 리셋 & 기본 ─────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --g1: #eaf3de; --g2: #c0dd97; --g3: #97c459;
-  --g4: #639922; --g5: #3b6d11; --g6: #27500a;
-  --teal: #1d9e75;
-  --white: #ffffff;
-  --bg: #f4f8f0;
-  --card: #ffffff;
-  --border: #e2ead8;
-  --text: #1e2d0e;
-  --muted: #6b7f55;
-  --radius: 14px;
-  --shadow: 0 2px 12px rgba(59,109,17,.10);
-}
-body {
-  font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌍 에코 챌린지</title>
+  <style>
+    /* ─── 리셋 & 기본 ─────────────────────────────── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-/* ─── 레이아웃 ────────────────────────────────── */
-.wrap   { max-width: 780px; margin: 0 auto; padding: 0 16px 60px; }
-.grid2  { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.card   { background: var(--card); border: 0.5px solid var(--border);
-          border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); }
-.card-sm { background: #f6faf0; border: 0.5px solid var(--border);
-           border-radius: 12px; padding: 16px; }
+    :root {
+      --g1: #eaf3de;
+      --g2: #c0dd97;
+      --g3: #97c459;
+      --g4: #639922;
+      --g5: #3b6d11;
+      --g6: #27500a;
+      --teal: #1d9e75;
+      --white: #ffffff;
+      --bg: #f4f8f0;
+      --card: #ffffff;
+      --border: #e2ead8;
+      --text: #1e2d0e;
+      --muted: #6b7f55;
+      --radius: 14px;
+      --shadow: 0 2px 12px rgba(59, 109, 17, .10);
+    }
 
-/* ─── 헤더 ────────────────────────────────────── */
-.header {
-  text-align: center;
-  padding: 28px 16px 20px;
-  background: linear-gradient(180deg, #d4edba 0%, transparent 100%);
-  border-radius: 0 0 24px 24px;
-  margin-bottom: 20px;
-}
-.header .globe { font-size: 36px; margin-bottom: 6px; }
-.header h1 { font-size: 22px; font-weight: 700; color: var(--g6); letter-spacing: -0.5px; }
-.header p  { font-size: 13px; color: var(--g4); margin-top: 4px; }
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-/* ─── 마퀴 ────────────────────────────────────── */
-.marquee-wrap {
-  overflow: hidden;
-  background: #f0faf0;
-  border: 0.5px solid var(--g2);
-  border-radius: 10px;
-  padding: 9px 0;
-  margin-bottom: 18px;
-}
-.marquee-inner {
-  display: inline-block;
-  white-space: nowrap;
-  font-size: 13px;
-  color: var(--g5);
-  animation: marquee 35s linear infinite;
-  padding-left: 100%;
-}
-@keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+    /* ─── 레이아웃 ────────────────────────────────── */
+    .wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 16px 60px;
+    }
 
-/* ─── 정원 캔버스 ─────────────────────────────── */
-.garden-wrap { margin-bottom: 14px; }
-.garden-label {
-  display: flex; align-items: center; gap: 8px;
-  margin-bottom: 10px;
-}
-.garden-label span { font-size: 15px; font-weight: 600; color: var(--g6); }
-.garden-label .pts { margin-left: auto; font-size: 13px; color: var(--g4); font-weight: 600; }
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
 
-.garden {
-  position: relative;
-  background: linear-gradient(180deg, #bde0ff 0%, #ceeaff 28%, #b2e09a 58%, #80c44a 78%, #5fa020 100%);
-  border-radius: 14px;
-  height: 185px;
-  overflow: hidden;
-}
-.garden .ground {
-  position: absolute; bottom: 0; left: 0; right: 0; height: 55px;
-  background: linear-gradient(180deg, #5fa020 0%, #47800f 45%, #345e0a 100%);
-  border-radius: 0 0 14px 14px;
-}
-#sun {
-  position: absolute; top: 12px; right: 20px;
-  width: 28px; height: 28px; border-radius: 50%;
-  background: #fde68a;
-  box-shadow: 0 0 14px #fde68a;
-  transition: all 1.2s;
-  opacity: .4;
-}
-#cloud1 { position: absolute; top: 16px; left: 12%; font-size: 20px; opacity: .6; }
-#cloud2 { position: absolute; top: 6px;  left: 44%; font-size: 15px; opacity: 0; transition: opacity 1.2s; }
-#bird1  { position: absolute; top: 30px; left: 63%; font-size: 12px; opacity: 0; transition: opacity 1.5s; }
-#rainbow{ position: absolute; top: 4px;  left: 18%; font-size: 30px; opacity: 0; transition: opacity 1.5s; }
+    .card {
+      background: var(--card);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
 
-#plants {
-  position: absolute; bottom: 40px; left: 0; right: 0;
-  display: flex; align-items: flex-end;
-  justify-content: space-around; padding: 0 10px;
-}
-#level-badge {
-  position: absolute; top: 10px; left: 12px;
-  background: rgba(255,255,255,.88);
-  border-radius: 20px; padding: 3px 11px;
-  font-size: 11px; font-weight: 600; color: var(--g6);
-}
-#particles { position: absolute; inset: 0; pointer-events: none; }
+    .card-sm {
+      background: #f6faf0;
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
 
-/* 진행 바 */
-.prog-row {
-  display: flex; justify-content: space-between;
-  margin: 10px 0 5px; font-size: 11px; color: var(--muted);
-}
-.prog-track { background: #d8eebc; border-radius: 99px; height: 8px; overflow: hidden; }
-.prog-fill  {
-  height: 100%; border-radius: 99px;
-  background: linear-gradient(90deg, var(--g3), var(--g5));
-  transition: width .9s ease;
-  width: 0%;
-}
+    /* ─── 헤더 ────────────────────────────────────── */
+    .header {
+      text-align: center;
+      padding: 28px 16px 20px;
+      background: linear-gradient(180deg, #d4edba 0%, transparent 100%);
+      border-radius: 0 0 24px 24px;
+      margin-bottom: 20px;
+    }
 
-/* ─── 탭 ──────────────────────────────────────── */
-.tabs {
-  display: flex; gap: 6px; overflow-x: auto;
-  padding-bottom: 4px; margin-bottom: 10px;
-  scrollbar-width: none;
-}
-.tabs::-webkit-scrollbar { display: none; }
-.tab {
-  flex-shrink: 0;
-  font-size: 12px; padding: 5px 13px;
-  border-radius: 20px; cursor: pointer;
-  border: 0.5px solid var(--border);
-  background: transparent; color: var(--muted);
-  transition: all .18s;
-  white-space: nowrap;
-}
-.tab.active {
-  background: var(--g1); color: var(--g6);
-  border-color: var(--g3); font-weight: 600;
-}
+    .header .globe {
+      font-size: 36px;
+      margin-bottom: 6px;
+    }
 
-/* ─── 카테고리 설명 ───────────────────────────── */
-.cat-desc {
-  font-size: 12px; color: var(--g4);
-  background: #f4faf0;
-  border-left: 3px solid var(--g3);
-  border-radius: 0 8px 8px 0;
-  padding: 6px 10px; margin-bottom: 10px;
-}
+    .header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--g6);
+      letter-spacing: -0.5px;
+    }
 
-/* ─── 폼 요소 ─────────────────────────────────── */
-input[type="text"],
-select {
-  width: 100%; padding: 10px 13px;
-  border: 0.5px solid var(--border);
-  border-radius: 10px; font-size: 14px;
-  background: var(--white); color: var(--text);
-  outline: none; margin-bottom: 10px;
-  transition: border-color .2s;
-}
-input[type="text"]:focus,
-select:focus { border-color: var(--g3); }
+    .header p {
+      font-size: 13px;
+      color: var(--g4);
+      margin-top: 4px;
+    }
 
-.btn-record {
-  width: 100%; padding: 13px;
-  background: var(--g5); color: #fff;
-  border: none; border-radius: 11px;
-  font-size: 14px; font-weight: 600;
-  cursor: pointer; letter-spacing: .2px;
-  transition: background .2s;
-}
-.btn-record:hover { background: var(--g6); }
-.btn-record:disabled { background: #aac485; cursor: not-allowed; }
+    /* ─── 마퀴 ────────────────────────────────────── */
+    .marquee-wrap {
+      overflow: hidden;
+      background: #f0faf0;
+      border: 0.5px solid var(--g2);
+      border-radius: 10px;
+      padding: 9px 0;
+      margin-bottom: 18px;
+    }
 
-/* ─── 섹션 타이틀 ─────────────────────────────── */
-.sec-title {
-  font-size: 15px; font-weight: 600;
-  color: var(--g6); margin-bottom: 14px;
-}
-.sec-row {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
-}
-.sec-row .sec-title { margin-bottom: 0; }
+    .marquee-inner {
+      display: inline-block;
+      white-space: nowrap;
+      font-size: 13px;
+      color: var(--g5);
+      animation: marquee 35s linear infinite;
+      padding-left: 100%;
+    }
 
-/* ─── 기록 아이템 ─────────────────────────────── */
-.rec-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 9px 0;
-  border-bottom: 0.5px solid var(--border);
-  animation: pop .35s ease forwards;
-}
-.rec-item:last-child { border-bottom: none; }
-.rec-emoji { font-size: 19px; flex-shrink: 0; }
-.rec-info  { flex: 1; min-width: 0; }
-.rec-name  {
-  font-size: 13px; font-weight: 500; color: var(--text);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.rec-time  { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.rec-pts   {
-  font-size: 12px; font-weight: 600; color: var(--g6);
-  background: var(--g1); padding: 2px 9px; border-radius: 20px;
-  white-space: nowrap; flex-shrink: 0;
-}
+    @keyframes marquee {
+      from {
+        transform: translateX(0)
+      }
 
-/* ─── 랭킹 ────────────────────────────────────── */
-.rank-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 0; border-bottom: 0.5px solid var(--border);
-}
-.rank-item:last-child { border-bottom: none; }
-.rank-num { font-size: 15px; font-weight: 700; color: var(--g4); width: 24px; text-align: center; }
-.rank-name { flex: 1; font-size: 13px; font-weight: 500; }
-.rank-lv   { font-size: 12px; color: var(--muted); }
-.rank-tot  { font-size: 13px; font-weight: 600; color: var(--g5); }
+      to {
+        transform: translateX(-50%)
+      }
+    }
 
-/* ─── 연결 상태 배지 ──────────────────────────── */
-.status-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: 11px; padding: 3px 10px; border-radius: 20px;
-  font-weight: 500;
-}
-.status-badge.ok   { background: #d4edda; color: #155724; }
-.status-badge.fail { background: #f8d7da; color: #721c24; }
-.status-badge.wait { background: #fff3cd; color: #856404; }
+    /* ─── 정원 캔버스 ─────────────────────────────── */
+    .garden-wrap {
+      margin-bottom: 14px;
+    }
 
-/* ─── 빈 상태 ─────────────────────────────────── */
-.empty {
-  text-align: center; padding: 2rem 0;
-  color: var(--muted); font-size: 13px;
-}
-.empty .empty-icon { font-size: 30px; margin-bottom: 8px; }
+    .garden-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
 
-/* ─── 유틸 ────────────────────────────────────── */
-.mt { margin-top: 14px; }
-.btn-sm {
-  font-size: 11px; color: var(--muted);
-  background: none; border: 0.5px solid var(--border);
-  border-radius: 6px; padding: 3px 9px; cursor: pointer;
-}
-.btn-sm:hover { background: var(--g1); }
+    .garden-label span {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--g6);
+    }
 
-/* ─── 애니메이션 ──────────────────────────────── */
-@keyframes pop {
-  0%   { transform: scale(.5); opacity: 0 }
-  60%  { transform: scale(1.1) }
-  100% { transform: scale(1);  opacity: 1 }
-}
-@keyframes bounce {
-  0%, 100% { transform: translateY(0) }
-  50%       { transform: translateY(-5px) }
-}
-@keyframes float-up {
-  0%   { transform: translateY(0);   opacity: 1 }
-  100% { transform: translateY(-70px); opacity: 0 }
-}
-@keyframes spin {
-  to { transform: rotate(360deg) }
-}
+    .garden-label .pts {
+      margin-left: auto;
+      font-size: 13px;
+      color: var(--g4);
+      font-weight: 600;
+    }
 
-/* ─── 로딩 스피너 ─────────────────────────────── */
-.spinner {
-  display: inline-block; width: 14px; height: 14px;
-  border: 2px solid var(--g2); border-top-color: var(--g5);
-  border-radius: 50%; animation: spin .7s linear infinite;
-  vertical-align: middle; margin-right: 5px;
-}
-</style>
+    .garden {
+      position: relative;
+      background: linear-gradient(180deg, #bde0ff 0%, #ceeaff 28%, #b2e09a 58%, #80c44a 78%, #5fa020 100%);
+      border-radius: 14px;
+      height: 185px;
+      overflow: hidden;
+    }
+
+    .garden .ground {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 55px;
+      background: linear-gradient(180deg, #5fa020 0%, #47800f 45%, #345e0a 100%);
+      border-radius: 0 0 14px 14px;
+    }
+
+    #sun {
+      position: absolute;
+      top: 12px;
+      right: 20px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #fde68a;
+      box-shadow: 0 0 14px #fde68a;
+      transition: all 1.2s;
+      opacity: .4;
+    }
+
+    #cloud1 {
+      position: absolute;
+      top: 16px;
+      left: 12%;
+      font-size: 20px;
+      opacity: .6;
+    }
+
+    #cloud2 {
+      position: absolute;
+      top: 6px;
+      left: 44%;
+      font-size: 15px;
+      opacity: 0;
+      transition: opacity 1.2s;
+    }
+
+    #bird1 {
+      position: absolute;
+      top: 30px;
+      left: 63%;
+      font-size: 12px;
+      opacity: 0;
+      transition: opacity 1.5s;
+    }
+
+    #rainbow {
+      position: absolute;
+      top: 4px;
+      left: 18%;
+      font-size: 30px;
+      opacity: 0;
+      transition: opacity 1.5s;
+    }
+
+    #plants {
+      position: absolute;
+      bottom: 40px;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+      padding: 0 10px;
+    }
+
+    #level-badge {
+      position: absolute;
+      top: 10px;
+      left: 12px;
+      background: rgba(255, 255, 255, .88);
+      border-radius: 20px;
+      padding: 3px 11px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--g6);
+    }
+
+    #particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    /* 진행 바 */
+    .prog-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px 0 5px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .prog-track {
+      background: #d8eebc;
+      border-radius: 99px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .prog-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--g3), var(--g5));
+      transition: width .9s ease;
+      width: 0%;
+    }
+
+    /* ─── 탭 ──────────────────────────────────────── */
+    .tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+      scrollbar-width: none;
+    }
+
+    .tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab {
+      flex-shrink: 0;
+      font-size: 12px;
+      padding: 5px 13px;
+      border-radius: 20px;
+      cursor: pointer;
+      border: 0.5px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      transition: all .18s;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      background: var(--g1);
+      color: var(--g6);
+      border-color: var(--g3);
+      font-weight: 600;
+    }
+
+    /* ─── 카테고리 설명 ───────────────────────────── */
+    .cat-desc {
+      font-size: 12px;
+      color: var(--g4);
+      background: #f4faf0;
+      border-left: 3px solid var(--g3);
+      border-radius: 0 8px 8px 0;
+      padding: 6px 10px;
+      margin-bottom: 10px;
+    }
+
+    /* ─── 폼 요소 ─────────────────────────────────── */
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 10px 13px;
+      border: 0.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      background: var(--white);
+      color: var(--text);
+      outline: none;
+      margin-bottom: 10px;
+      transition: border-color .2s;
+    }
+
+    input[type="text"]:focus,
+    select:focus {
+      border-color: var(--g3);
+    }
+
+    .btn-record {
+      width: 100%;
+      padding: 13px;
+      background: var(--g5);
+      color: #fff;
+      border: none;
+      border-radius: 11px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: .2px;
+      transition: background .2s;
+    }
+
+    .btn-record:hover {
+      background: var(--g6);
+    }
+
+    .btn-record:disabled {
+      background: #aac485;
+      cursor: not-allowed;
+    }
+
+    /* ─── 섹션 타이틀 ─────────────────────────────── */
+    .sec-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--g6);
+      margin-bottom: 14px;
+    }
+
+    .sec-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .sec-row .sec-title {
+      margin-bottom: 0;
+    }
+
+    /* ─── 기록 아이템 ─────────────────────────────── */
+    .rec-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 0.5px solid var(--border);
+      animation: pop .35s ease forwards;
+    }
+
+    .rec-item:last-child {
+      border-bottom: none;
+    }
+
+    .rec-emoji {
+      font-size: 19px;
+      flex-shrink: 0;
+    }
+
+    .rec-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .rec-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .rec-time {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .rec-pts {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--g6);
+      background: var(--g1);
+      padding: 2px 9px;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* ─── 랭킹 ────────────────────────────────────── */
+    .rank-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 0.5px solid var(--border);
+    }
+
+    .rank-item:last-child {
+      border-bottom: none;
+    }
+
+    .rank-num {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--g4);
+      width: 24px;
+      text-align: center;
+    }
+
+    .rank-name {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .rank-lv {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .rank-tot {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--g5);
+    }
+
+    /* ─── 연결 상태 배지 ──────────────────────────── */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    .status-badge.ok {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-badge.fail {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .status-badge.wait {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    /* ─── 빈 상태 ─────────────────────────────────── */
+    .empty {
+      text-align: center;
+      padding: 2rem 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .empty .empty-icon {
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    /* ─── 유틸 ────────────────────────────────────── */
+    .mt {
+      margin-top: 14px;
+    }
+
+    .btn-sm {
+      font-size: 11px;
+      color: var(--muted);
+      background: none;
+      border: 0.5px solid var(--border);
+      border-radius: 6px;
+      padding: 3px 9px;
+      cursor: pointer;
+    }
+
+    .btn-sm:hover {
+      background: var(--g1);
+    }
+
+    /* ─── 애니메이션 ──────────────────────────────── */
+    @keyframes pop {
+      0% {
+        transform: scale(.5);
+        opacity: 0
+      }
+
+      60% {
+        transform: scale(1.1)
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1
+      }
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-5px)
+      }
+    }
+
+    @keyframes float-up {
+      0% {
+        transform: translateY(0);
+        opacity: 1
+      }
+
+      100% {
+        transform: translateY(-70px);
+        opacity: 0
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    /* ─── 로딩 스피너 ─────────────────────────────── */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid var(--g2);
+      border-top-color: var(--g5);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      vertical-align: middle;
+      margin-right: 5px;
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="wrap">
+  <div class="wrap">
 
-  <!-- 헤더 -->
-  <div class="header">
-    <div class="globe">🌍</div>
-    <h1>에코 챌린지</h1>
-    <p>우리의 작은 실천이 지구를 살려요</p>
-  </div>
-
-  <!-- 연결 상태 -->
-  <div style="text-align:center;margin-bottom:14px;">
-    <span id="conn-badge" class="status-badge wait">
-      <span class="spinner"></span> 구글 시트 연결 중...
-    </span>
-  </div>
-
-  <!-- 마퀴 -->
-  <div class="marquee-wrap">
-    <div class="marquee-inner">
-      🌱 오늘의 한 걸음이 지구의 내일을 바꿔요 &nbsp;|&nbsp;
-      💧 물 한 컵을 아끼면 누군가의 하루가 달라져요 &nbsp;|&nbsp;
-      ♻️ 분리수거 하나가 자원의 새 생명을 만들어요 &nbsp;|&nbsp;
-      🚴 자전거 하나가 하늘을 맑게 해요 &nbsp;|&nbsp;
-      🌳 나무 한 그루가 100명의 숨을 쉬게 해요 &nbsp;|&nbsp;
-      👜 장바구니 하나로 비닐 10장을 줄여요 &nbsp;|&nbsp;
-      🌱 오늘의 한 걸음이 지구의 내일을 바꿔요 &nbsp;|&nbsp;
-      💧 물 한 컵을 아끼면 누군가의 하루가 달라져요 &nbsp;|&nbsp;
-      ♻️ 분리수거 하나가 자원의 새 생명을 만들어요 &nbsp;|&nbsp;
-      🚴 자전거 하나가 하늘을 맑게 해요 &nbsp;|&nbsp;
-      🌳 나무 한 그루가 100명의 숨을 쉬게 해요 &nbsp;|&nbsp;
-      👜 장바구니 하나로 비닐 10장을 줄여요
-    </div>
-  </div>
-
-  <!-- 정원 -->
-  <div class="card garden-wrap">
-    <div class="garden-label">
-      <span>🌿 우리의 정원</span>
-      <span class="pts" id="total-pts">0 포인트</span>
+    <!-- 헤더 -->
+    <div class="header">
+      <div class="globe">🌍</div>
+      <h1>에코 챌린지</h1>
+      <p>우리의 작은 실천이 지구를 살려요</p>
     </div>
 
-    <div class="garden">
-      <div id="sun"></div>
-      <span id="cloud1">☁️</span>
-      <span id="cloud2">☁️</span>
-      <span id="bird1">🐦</span>
-      <span id="rainbow">🌈</span>
-      <div class="ground"></div>
-      <div id="plants"></div>
-      <div id="level-badge">🌱 씨앗 단계</div>
-      <div id="particles"></div>
+    <!-- 연결 상태 -->
+    <div style="text-align:center;margin-bottom:14px;">
+      <span id="conn-badge" class="status-badge wait">
+        <span class="spinner"></span> 구글 시트 연결 중...
+      </span>
     </div>
 
-    <div class="prog-row">
-      <span>다음 레벨까지</span>
-      <span id="next-pts" style="color:var(--g4);font-weight:600;">20 포인트 더 필요</span>
-    </div>
-    <div class="prog-track"><div class="prog-fill" id="prog-bar"></div></div>
-  </div>
-
-  <!-- 통계 -->
-  <div class="grid2" style="margin-bottom:14px;">
-    <div class="card-sm">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">총 실천 횟수</div>
-      <div id="stat-cnt" style="font-size:28px;font-weight:700;color:var(--g6);">0</div>
-      <div style="font-size:11px;color:var(--g3);margin-top:2px;">번 실천했어요</div>
-    </div>
-    <div class="card-sm">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">연속 실천일</div>
-      <div id="stat-streak" style="font-size:28px;font-weight:700;color:var(--teal);">0</div>
-      <div style="font-size:11px;color:var(--g3);margin-top:2px;">일 연속 🔥</div>
-    </div>
-  </div>
-
-  <!-- 기록하기 -->
-  <div class="card" style="margin-bottom:14px;">
-    <div class="sec-title">✨ 오늘의 실천 기록하기</div>
-
-    <input type="text" id="name-input" placeholder="이름을 입력하세요" />
-
-    <!-- 카테고리 탭 -->
-    <div class="tabs">
-      <button class="tab active" id="cb-all"       onclick="setCat('all')">🌍 전체</button>
-      <button class="tab"        id="cb-water"      onclick="setCat('water')">💧 물 절약</button>
-      <button class="tab"        id="cb-energy"     onclick="setCat('energy')">⚡ 에너지</button>
-      <button class="tab"        id="cb-recycle"    onclick="setCat('recycle')">♻️ 분리수거</button>
-      <button class="tab"        id="cb-transport"  onclick="setCat('transport')">🚌 교통</button>
-      <button class="tab"        id="cb-consume"    onclick="setCat('consume')">🛍️ 소비</button>
-      <button class="tab"        id="cb-food"       onclick="setCat('food')">🥗 식생활</button>
-      <button class="tab"        id="cb-nature"     onclick="setCat('nature')">🌿 자연</button>
-      <button class="tab"        id="cb-share"      onclick="setCat('share')">🤝 나눔</button>
+    <!-- 마퀴 -->
+    <div class="marquee-wrap">
+      <div class="marquee-inner">
+        🌱 오늘의 한 걸음이 지구의 내일을 바꿔요 &nbsp;|&nbsp;
+        💧 물 한 컵을 아끼면 누군가의 하루가 달라져요 &nbsp;|&nbsp;
+        ♻️ 분리수거 하나가 자원의 새 생명을 만들어요 &nbsp;|&nbsp;
+        🚴 자전거 하나가 하늘을 맑게 해요 &nbsp;|&nbsp;
+        🌳 나무 한 그루가 100명의 숨을 쉬게 해요 &nbsp;|&nbsp;
+        👜 장바구니 하나로 비닐 10장을 줄여요 &nbsp;|&nbsp;
+        🌱 오늘의 한 걸음이 지구의 내일을 바꿔요 &nbsp;|&nbsp;
+        💧 물 한 컵을 아끼면 누군가의 하루가 달라져요 &nbsp;|&nbsp;
+        ♻️ 분리수거 하나가 자원의 새 생명을 만들어요 &nbsp;|&nbsp;
+        🚴 자전거 하나가 하늘을 맑게 해요 &nbsp;|&nbsp;
+        🌳 나무 한 그루가 100명의 숨을 쉬게 해요 &nbsp;|&nbsp;
+        👜 장바구니 하나로 비닐 10장을 줄여요
+      </div>
     </div>
 
-    <div class="cat-desc" id="cat-desc">🌍 전체 항목에서 선택하세요</div>
+    <!-- 정원 -->
+    <div class="card garden-wrap">
+      <div class="garden-label">
+        <span>🌿 우리의 정원</span>
+        <span class="pts" id="total-pts">0 포인트</span>
+      </div>
 
-    <select id="action-sel">
-      <option value="">실천 사례를 선택하세요</option>
-    </select>
+      <div class="garden">
+        <div id="sun"></div>
+        <span id="cloud1">☁️</span>
+        <span id="cloud2">☁️</span>
+        <span id="bird1">🐦</span>
+        <span id="rainbow">🌈</span>
+        <div class="ground"></div>
+        <div id="plants"></div>
+        <div id="level-badge">🌱 씨앗 단계</div>
+        <div id="particles"></div>
+      </div>
 
-    <button class="btn-record" id="rec-btn" onclick="doRecord()">
-      기록하기 🌱
-    </button>
-  </div>
-
-  <!-- 실천 기록 목록 -->
-  <div class="card" style="margin-bottom:14px;">
-    <div class="sec-row">
-      <span class="sec-title">📋 실천 기록</span>
-      <button class="btn-sm" onclick="refreshRecords()">↻ 새로고침</button>
-      <button class="btn-sm" onclick="clearLocal()">초기화</button>
+      <div class="prog-row">
+        <span>다음 레벨까지</span>
+        <span id="next-pts" style="color:var(--g4);font-weight:600;">20 포인트 더 필요</span>
+      </div>
+      <div class="prog-track">
+        <div class="prog-fill" id="prog-bar"></div>
+      </div>
     </div>
-    <div id="rec-list">
-      <div class="empty"><div class="empty-icon">🌱</div>첫 번째 실천을 기록해보세요!</div>
+
+    <!-- 통계 -->
+    <div class="grid2" style="margin-bottom:14px;">
+      <div class="card-sm">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">총 실천 횟수</div>
+        <div id="stat-cnt" style="font-size:28px;font-weight:700;color:var(--g6);">0</div>
+        <div style="font-size:11px;color:var(--g3);margin-top:2px;">번 실천했어요</div>
+      </div>
+      <div class="card-sm">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px;">연속 실천일</div>
+        <div id="stat-streak" style="font-size:28px;font-weight:700;color:var(--teal);">0</div>
+        <div style="font-size:11px;color:var(--g3);margin-top:2px;">일 연속 🔥</div>
+      </div>
     </div>
-  </div>
+
+    <!-- 기록하기 -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="sec-title">✨ 오늘의 실천 기록하기</div>
+
+      <input type="text" id="name-input" placeholder="이름을 입력하세요" />
+
+      <!-- 카테고리 탭 -->
+      <div class="tabs">
+        <button class="tab active" id="cb-all" onclick="setCat('all')">🌍 전체</button>
+        <button class="tab" id="cb-water" onclick="setCat('water')">💧 물 절약</button>
+        <button class="tab" id="cb-energy" onclick="setCat('energy')">⚡ 에너지</button>
+        <button class="tab" id="cb-recycle" onclick="setCat('recycle')">♻️ 분리수거</button>
+        <button class="tab" id="cb-transport" onclick="setCat('transport')">🚌 교통</button>
+        <button class="tab" id="cb-consume" onclick="setCat('consume')">🛍️ 소비</button>
+        <button class="tab" id="cb-food" onclick="setCat('food')">🥗 식생활</button>
+        <button class="tab" id="cb-nature" onclick="setCat('nature')">🌿 자연</button>
+        <button class="tab" id="cb-share" onclick="setCat('share')">🤝 나눔</button>
+      </div>
+
+      <div class="cat-desc" id="cat-desc">🌍 전체 항목에서 선택하세요</div>
+
+      <select id="action-sel">
+        <option value="">실천 사례를 선택하세요</option>
+      </select>
+
+      <button class="btn-record" id="rec-btn" onclick="doRecord()">
+        기록하기 🌱
+      </button>
+    </div>
+
+    <!-- 실천 기록 목록 -->
+    <div class="card" style="margin-bottom:14px;">
+      <div class="sec-row">
+        <span class="sec-title">📋 실천 기록</span>
+        <button class="btn-sm" onclick="refreshRecords()">↻ 새로고침</button>
+        <button class="btn-sm" onclick="clearLocal()">초기화</button>
+      </div>
+      <div id="rec-list">
+        <div class="empty">
+          <div class="empty-icon">🌱</div>첫 번째 실천을 기록해보세요!
+        </div>
+      </div>
+    </div>
 
 
 
-</div><!-- /wrap -->
+  </div><!-- /wrap -->
 
 
-<script>
-/* ============================================================
-   ⚙️  설정
-   ============================================================ */
+  <script>
+    /* ============================================================
+       ⚙️  설정
+       ============================================================ */
 
-// ▼ 앱스 스크립트 배포 후 받은 '웹 앱 URL'을 아래 따옴표 안에 넣으세요 ▼
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymT6OmuNRGz2BFjYlDAKhNSXgaysO8CkLxvnBEsIfUEFcTbKy29IJU-93J9EFG7wZs/exec";
-// ▲ ─────────────────────────────── ▲
+    // ▼ 앱스 스크립트 배포 후 받은 '웹 앱 URL'을 아래 따옴표 안에 넣으세요 ▼
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymT6OmuNRGz2BFjYlDAKhNSXgaysO8CkLxvnBEsIfUEFcTbKy29IJU-93J9EFG7wZs/exec";
+    // ▲ ─────────────────────────────── ▲
 
-/* ============================================================
-   실천 항목 데이터
-   ============================================================ */
-const CATS = {
-  water: {
-    label: "💧 물 절약", desc: "물 한 방울이 소중해요",
-    items: [
-      { e:"🦷", l:"양치할 때 컵 사용하기",          p:5 },
-      { e:"🚿", l:"샤워 시간 5분 줄이기",            p:5 },
-      { e:"🚿", l:"샤워 시간 10분 줄이기",           p:8 },
-      { e:"🍽️", l:"설거지 물 절약하기",              p:5 },
-      { e:"🌧️", l:"빗물 모아 화분에 주기",           p:8 },
-      { e:"🚰", l:"수돗물 틀어놓지 않기",             p:5 },
-      { e:"🧹", l:"대걸레 빨 때 물 아끼기",           p:5 },
-      { e:"🪣", l:"세탁물 모아서 한 번에 돌리기",     p:8 },
-      { e:"💦", l:"물 새는 곳 발견해 알리기",         p:10},
-    ]
-  },
-  energy: {
-    label: "⚡ 에너지 절약", desc: "작은 절약이 지구 온도를 낮춰요",
-    items: [
-      { e:"💡", l:"안 쓰는 전등 끄기",               p:5 },
-      { e:"🔌", l:"충전 완료되면 플러그 빼기",        p:5 },
-      { e:"🖥️", l:"컴퓨터 절전 모드 설정하기",       p:5 },
-      { e:"❄️", l:"냉방 온도 적정하게 유지하기",      p:8 },
-      { e:"🌡️", l:"난방 온도 1도 낮추기",            p:8 },
-      { e:"☀️", l:"낮에 햇빛으로 조명 대신하기",      p:5 },
-      { e:"📺", l:"TV 보지 않을 때 끄기",             p:5 },
-      { e:"🔋", l:"절전형 기기 사용하기",             p:8 },
-      { e:"🪟", l:"단열 커튼으로 냉난방 줄이기",      p:8 },
-    ]
-  },
-  recycle: {
-    label: "♻️ 분리수거", desc: "쓰레기가 자원이 되는 마법",
-    items: [
-      { e:"♻️", l:"분리수거 제대로 하기",             p:5 },
-      { e:"🗑️", l:"음식물 쓰레기 줄이기",            p:5 },
-      { e:"🥫", l:"캔류 찌그러뜨려 버리기",           p:5 },
-      { e:"📦", l:"택배 박스 재활용하기",              p:5 },
-      { e:"🧴", l:"플라스틱 라벨 떼고 버리기",        p:5 },
-      { e:"🪣", l:"음식물 국물 제거 후 버리기",       p:5 },
-      { e:"📰", l:"종이류 묶어서 배출하기",            p:5 },
-      { e:"💻", l:"폐전자기기 올바르게 분리하기",      p:8 },
-      { e:"🧪", l:"형광등·건전지 전용 수거함 사용",   p:8 },
-      { e:"🧺", l:"이면지 활용하기",                   p:5 },
-    ]
-  },
-  transport: {
-    label: "🚌 친환경 교통", desc: "이동 방법이 공기를 바꿔요",
-    items: [
-      { e:"🚶", l:"가까운 거리는 걸어가기",           p:5 },
-      { e:"🚌", l:"대중교통 이용하기",                p:8 },
-      { e:"🚴", l:"자전거 타기",                      p:8 },
-      { e:"🛴", l:"킥보드로 짧은 거리 이동하기",      p:5 },
-      { e:"🚗", l:"카풀 하기",                        p:10},
-      { e:"🚶", l:"엘리베이터 대신 계단 이용",        p:5 },
-      { e:"🏃", l:"학교까지 달려가기",                p:8 },
-      { e:"🗺️", l:"최단 경로로 이동하기",            p:5 },
-    ]
-  },
-  consume: {
-    label: "🛍️ 친환경 소비", desc: "선택이 세상을 바꿔요",
-    items: [
-      { e:"👜", l:"장바구니 사용하기",                p:5 },
-      { e:"☕", l:"텀블러 사용하기",                  p:8 },
-      { e:"🍱", l:"다회용 용기 사용하기",             p:8 },
-      { e:"🧴", l:"리필 제품 사용하기",               p:8 },
-      { e:"👕", l:"헌 옷 기부하기",                   p:10},
-      { e:"🪡", l:"옷 수선해서 오래 입기",            p:8 },
-      { e:"📦", l:"과대 포장 제품 거부하기",          p:5 },
-      { e:"🛒", l:"중고 물품 구매하기",               p:10},
-      { e:"🖊️", l:"다 쓴 볼펜 리필심 교체하기",     p:5 },
-      { e:"🧻", l:"종이 타월 대신 손수건 쓰기",       p:5 },
-      { e:"🥢", l:"일회용 수저 거절하기",             p:5 },
-    ]
-  },
-  food: {
-    label: "🥗 식생활", desc: "먹는 것도 지구를 지켜요",
-    items: [
-      { e:"🥗", l:"음식 남기지 않기",                 p:5 },
-      { e:"🥦", l:"채식 메뉴 하루 한 끼 먹기",       p:8 },
-      { e:"🍱", l:"집밥 싸서 가져오기",               p:5 },
-      { e:"🍎", l:"제철 음식 먹기",                   p:5 },
-      { e:"🥬", l:"로컬푸드 구매하기",                p:8 },
-      { e:"🌾", l:"음식 재료 껍질까지 활용하기",      p:5 },
-      { e:"🫙", l:"음식 보관 잘해서 버리지 않기",     p:5 },
-      { e:"🧑‍🍳",l:"직접 요리해서 포장 줄이기",     p:8 },
-    ]
-  },
-  nature: {
-    label: "🌿 자연 가꾸기", desc: "자연과 친해지면 지구도 기뻐해요",
-    items: [
-      { e:"🌱", l:"씨앗 심기",                        p:8 },
-      { e:"🌳", l:"나무 심기",                        p:10},
-      { e:"🪴", l:"화분 키우기",                      p:5 },
-      { e:"💧", l:"나무·화단에 물 주기",              p:5 },
-      { e:"🧹", l:"공원 쓰레기 줍기",                 p:10},
-      { e:"🏫", l:"학교 텃밭 가꾸기",                 p:8 },
-      { e:"🐛", l:"벌레·동물 보호하기",               p:5 },
-      { e:"🌊", l:"해변·하천 정화 활동 참가",         p:15},
-      { e:"🐝", l:"꽃 가꾸어 벌·나비 돕기",          p:8 },
-    ]
-  },
-  share: {
-    label: "🤝 나눔·실천 알리기", desc: "함께하면 더 큰 변화를 만들어요",
-    items: [
-      { e:"📢", l:"친구에게 에코 챌린지 알리기",      p:5 },
-      { e:"👨‍👩‍👧",l:"가족과 함께 환경 실천하기",   p:8 },
-      { e:"📖", l:"환경 책 읽기",                     p:5 },
-      { e:"🎨", l:"환경 포스터 그리기",               p:8 },
-      { e:"📝", l:"환경 일기 쓰기",                   p:5 },
-      { e:"🌐", l:"환경 캠페인 참여하기",             p:10},
-      { e:"👕", l:"안 쓰는 물건 필요한 사람과 나누기",p:8 },
-      { e:"💬", l:"환경 뉴스 가족과 나누기",          p:5 },
-    ]
-  }
-};
+    /* ============================================================
+       실천 항목 데이터
+       ============================================================ */
+    const CATS = {
+      water: {
+        label: "💧 물 절약", desc: "물 한 방울이 소중해요",
+        items: [
+          { e: "🦷", l: "양치할 때 컵 사용하기", p: 5 },
+          { e: "🚿", l: "샤워 시간 5분 줄이기", p: 5 },
+          { e: "🚿", l: "샤워 시간 10분 줄이기", p: 8 },
+          { e: "🍽️", l: "설거지 물 절약하기", p: 5 },
+          { e: "🌧️", l: "빗물 모아 화분에 주기", p: 8 },
+          { e: "🚰", l: "수돗물 틀어놓지 않기", p: 5 },
+          { e: "🧹", l: "대걸레 빨 때 물 아끼기", p: 5 },
+          { e: "🪣", l: "세탁물 모아서 한 번에 돌리기", p: 8 },
+          { e: "💦", l: "물 새는 곳 발견해 알리기", p: 10 },
+        ]
+      },
+      energy: {
+        label: "⚡ 에너지 절약", desc: "작은 절약이 지구 온도를 낮춰요",
+        items: [
+          { e: "💡", l: "안 쓰는 전등 끄기", p: 5 },
+          { e: "🔌", l: "충전 완료되면 플러그 빼기", p: 5 },
+          { e: "🖥️", l: "컴퓨터 절전 모드 설정하기", p: 5 },
+          { e: "❄️", l: "냉방 온도 적정하게 유지하기", p: 8 },
+          { e: "🌡️", l: "난방 온도 1도 낮추기", p: 8 },
+          { e: "☀️", l: "낮에 햇빛으로 조명 대신하기", p: 5 },
+          { e: "📺", l: "TV 보지 않을 때 끄기", p: 5 },
+          { e: "🔋", l: "절전형 기기 사용하기", p: 8 },
+          { e: "🪟", l: "단열 커튼으로 냉난방 줄이기", p: 8 },
+        ]
+      },
+      recycle: {
+        label: "♻️ 분리수거", desc: "쓰레기가 자원이 되는 마법",
+        items: [
+          { e: "♻️", l: "분리수거 제대로 하기", p: 5 },
+          { e: "🗑️", l: "음식물 쓰레기 줄이기", p: 5 },
+          { e: "🥫", l: "캔류 찌그러뜨려 버리기", p: 5 },
+          { e: "📦", l: "택배 박스 재활용하기", p: 5 },
+          { e: "🧴", l: "플라스틱 라벨 떼고 버리기", p: 5 },
+          { e: "🪣", l: "음식물 국물 제거 후 버리기", p: 5 },
+          { e: "📰", l: "종이류 묶어서 배출하기", p: 5 },
+          { e: "💻", l: "폐전자기기 올바르게 분리하기", p: 8 },
+          { e: "🧪", l: "형광등·건전지 전용 수거함 사용", p: 8 },
+          { e: "🧺", l: "이면지 활용하기", p: 5 },
+        ]
+      },
+      transport: {
+        label: "🚌 친환경 교통", desc: "이동 방법이 공기를 바꿔요",
+        items: [
+          { e: "🚶", l: "가까운 거리는 걸어가기", p: 5 },
+          { e: "🚌", l: "대중교통 이용하기", p: 8 },
+          { e: "🚴", l: "자전거 타기", p: 8 },
+          { e: "🛴", l: "킥보드로 짧은 거리 이동하기", p: 5 },
+          { e: "🚗", l: "카풀 하기", p: 10 },
+          { e: "🚶", l: "엘리베이터 대신 계단 이용", p: 5 },
+          { e: "🏃", l: "학교까지 달려가기", p: 8 },
+          { e: "🗺️", l: "최단 경로로 이동하기", p: 5 },
+        ]
+      },
+      consume: {
+        label: "🛍️ 친환경 소비", desc: "선택이 세상을 바꿔요",
+        items: [
+          { e: "👜", l: "장바구니 사용하기", p: 5 },
+          { e: "☕", l: "텀블러 사용하기", p: 8 },
+          { e: "🍱", l: "다회용 용기 사용하기", p: 8 },
+          { e: "🧴", l: "리필 제품 사용하기", p: 8 },
+          { e: "👕", l: "헌 옷 기부하기", p: 10 },
+          { e: "🪡", l: "옷 수선해서 오래 입기", p: 8 },
+          { e: "📦", l: "과대 포장 제품 거부하기", p: 5 },
+          { e: "🛒", l: "중고 물품 구매하기", p: 10 },
+          { e: "🖊️", l: "다 쓴 볼펜 리필심 교체하기", p: 5 },
+          { e: "🧻", l: "종이 타월 대신 손수건 쓰기", p: 5 },
+          { e: "🥢", l: "일회용 수저 거절하기", p: 5 },
+        ]
+      },
+      food: {
+        label: "🥗 식생활", desc: "먹는 것도 지구를 지켜요",
+        items: [
+          { e: "🥗", l: "음식 남기지 않기", p: 5 },
+          { e: "🥦", l: "채식 메뉴 하루 한 끼 먹기", p: 8 },
+          { e: "🍱", l: "집밥 싸서 가져오기", p: 5 },
+          { e: "🍎", l: "제철 음식 먹기", p: 5 },
+          { e: "🥬", l: "로컬푸드 구매하기", p: 8 },
+          { e: "🌾", l: "음식 재료 껍질까지 활용하기", p: 5 },
+          { e: "🫙", l: "음식 보관 잘해서 버리지 않기", p: 5 },
+          { e: "🧑‍🍳", l: "직접 요리해서 포장 줄이기", p: 8 },
+        ]
+      },
+      nature: {
+        label: "🌿 자연 가꾸기", desc: "자연과 친해지면 지구도 기뻐해요",
+        items: [
+          { e: "🌱", l: "씨앗 심기", p: 8 },
+          { e: "🌳", l: "나무 심기", p: 10 },
+          { e: "🪴", l: "화분 키우기", p: 5 },
+          { e: "💧", l: "나무·화단에 물 주기", p: 5 },
+          { e: "🧹", l: "공원 쓰레기 줍기", p: 10 },
+          { e: "🏫", l: "학교 텃밭 가꾸기", p: 8 },
+          { e: "🐛", l: "벌레·동물 보호하기", p: 5 },
+          { e: "🌊", l: "해변·하천 정화 활동 참가", p: 15 },
+          { e: "🐝", l: "꽃 가꾸어 벌·나비 돕기", p: 8 },
+        ]
+      },
+      share: {
+        label: "🤝 나눔·실천 알리기", desc: "함께하면 더 큰 변화를 만들어요",
+        items: [
+          { e: "📢", l: "친구에게 에코 챌린지 알리기", p: 5 },
+          { e: "👨‍👩‍👧", l: "가족과 함께 환경 실천하기", p: 8 },
+          { e: "📖", l: "환경 책 읽기", p: 5 },
+          { e: "🎨", l: "환경 포스터 그리기", p: 8 },
+          { e: "📝", l: "환경 일기 쓰기", p: 5 },
+          { e: "🌐", l: "환경 캠페인 참여하기", p: 10 },
+          { e: "👕", l: "안 쓰는 물건 필요한 사람과 나누기", p: 8 },
+          { e: "💬", l: "환경 뉴스 가족과 나누기", p: 5 },
+        ]
+      }
+    };
 
-/* ============================================================
-   레벨 시스템
-   ============================================================ */
-const LEVELS = [
-  { min:0,    max:19,   name:"씨앗 단계",  badge:"🌱" },
-  { min:20,   max:49,   name:"새싹 단계",  badge:"🌿" },
-  { min:50,   max:99,   name:"꽃봉오리",   badge:"🌷" },
-  { min:100,  max:199,  name:"꽃밭 단계",  badge:"🌸" },
-  { min:200,  max:349,  name:"나무 단계",  badge:"🌲" },
-  { min:350,  max:599,  name:"숲 단계",    badge:"🌳" },
-  { min:600,  max:999,  name:"무성한 숲",  badge:"🏕️" },
-  { min:1000, max:9999, name:"에코 낙원",  badge:"🌍" },
-];
-const PLANTS = {
-  0:    [],
-  20:   ["🌱"],
-  50:   ["🌿","🌱","🌾"],
-  100:  ["🌷","🌿","🌱","🌾","🌻"],
-  200:  ["🌲","🌷","🌿","🌻","🌾","🌱"],
-  350:  ["🌳","🌲","🌷","🌻","🌿","🌾","🍄"],
-  600:  ["🌳","🌲","🌳","🌷","🌻","🌿","🍄","🦋","🌾"],
-  1000: ["🌳","🌲","🌳","🌲","🌷","🌺","🌻","🦋","🐦","🍄","🌿"],
-};
+    /* ============================================================
+       레벨 시스템
+       ============================================================ */
+    const LEVELS = [
+      { min: 0, max: 19, name: "씨앗 단계", badge: "🌱" },
+      { min: 20, max: 49, name: "새싹 단계", badge: "🌿" },
+      { min: 50, max: 99, name: "꽃봉오리", badge: "🌷" },
+      { min: 100, max: 199, name: "꽃밭 단계", badge: "🌸" },
+      { min: 200, max: 349, name: "나무 단계", badge: "🌲" },
+      { min: 350, max: 599, name: "숲 단계", badge: "🌳" },
+      { min: 600, max: 999, name: "무성한 숲", badge: "🏕️" },
+      { min: 1000, max: 9999, name: "에코 낙원", badge: "🌍" },
+    ];
+    const PLANTS = {
+      0: [],
+      20: ["🌱"],
+      50: ["🌿", "🌱", "🌾"],
+      100: ["🌷", "🌿", "🌱", "🌾", "🌻"],
+      200: ["🌲", "🌷", "🌿", "🌻", "🌾", "🌱"],
+      350: ["🌳", "🌲", "🌷", "🌻", "🌿", "🌾", "🍄"],
+      600: ["🌳", "🌲", "🌳", "🌷", "🌻", "🌿", "🍄", "🦋", "🌾"],
+      1000: ["🌳", "🌲", "🌳", "🌲", "🌷", "🌺", "🌻", "🦋", "🐦", "🍄", "🌿"],
+    };
 
-/* ============================================================
-   상태
-   ============================================================ */
-let curCat   = "all";
-let recs     = JSON.parse(localStorage.getItem("eco-v3") || "[]");
-let totalPts = recs.reduce((s, r) => s + r.p, 0);
-let sheetOk  = false;   // 구글 시트 연결 여부
+    /* ============================================================
+       상태
+       ============================================================ */
+    let curCat = "all";
+    let recs = JSON.parse(localStorage.getItem("eco-v3") || "[]");
+    let totalPts = recs.reduce((s, r) => s + r.p, 0);
+    let sheetOk = false;   // 구글 시트 연결 여부
 
-/* ============================================================
-   구글 시트 API 호출
-   ============================================================ */
-async function saveToSheet(rec) {
-  if (!sheetOk) return;
-  try {
-    await fetch(SCRIPT_URL, {
-      method: "POST",
-      
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        date:     rec.date,
-        time:     rec.time,
-        name:     rec.name,
-        category: rec.cat,
-        label:    rec.l,
-        points:   rec.p,
-        emoji:    rec.e
-      })
-    });
-  } catch (err) {
-    console.warn("시트 저장 실패:", err);
-  }
-}
+    /* ============================================================
+       구글 시트 API 호출
+       ============================================================ */
+    async function saveToSheet(rec) {
+      if (!sheetOk) return;
+      try {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
 
-async function loadFromSheet() {
-  try {
-    const res  = await fetch(SCRIPT_URL + "?action=load");
-    const data = await res.json();
-    if (data.result === "success") {
-      // 시트 데이터를 로컬 형식으로 변환
-      return data.records.map(r => ({
-        date: r.date, time: r.time, name: r.name,
-        cat:  r.category, l: r.label, p: Number(r.points), e: r.emoji
-      }));
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            date: rec.date,
+            time: rec.time,
+            name: rec.name,
+            category: rec.cat,
+            label: rec.l,
+            points: rec.p,
+            emoji: rec.e
+          })
+        });
+      } catch (err) {
+        console.warn("시트 저장 실패:", err);
+      }
     }
-  } catch (err) {
-    console.warn("시트 불러오기 실패:", err);
-  }
-  return null;
-}
 
-async function loadSummary() {
-  const list = document.getElementById("rank-list");
-  if (!list) return;
-  list.innerHTML = '<div class="empty"><div class="spinner"></div> 불러오는 중...</div>';
-  try {
-    const res  = await fetch(SCRIPT_URL + "?action=summary");
-    const data = await res.json();
-    if (data.result === "success" && data.summary.length > 0) {
-      const sorted = [...data.summary].sort((a, b) => b.total - a.total);
-      const medals = ["🥇","🥈","🥉"];
-      list.innerHTML = sorted.map((s, i) => `
+    async function loadFromSheet() {
+      try {
+        const res = await fetch(SCRIPT_URL + "?action=load");
+        const data = await res.json();
+        if (data.result === "success") {
+          // 시트 데이터를 로컬 형식으로 변환
+          return data.records.map(r => ({
+            date: r.date, time: r.time, name: r.name,
+            cat: r.category, l: r.label, p: Number(r.points), e: r.emoji
+          }));
+        }
+      } catch (err) {
+        console.warn("시트 불러오기 실패:", err);
+      }
+      return null;
+    }
+
+    async function loadSummary() {
+      const list = document.getElementById("rank-list");
+      if (!list) return;
+      list.innerHTML = '<div class="empty"><div class="spinner"></div> 불러오는 중...</div>';
+      try {
+        const res = await fetch(SCRIPT_URL + "?action=summary");
+        const data = await res.json();
+        if (data.result === "success" && data.summary.length > 0) {
+          const sorted = [...data.summary].sort((a, b) => b.total - a.total);
+          const medals = ["🥇", "🥈", "🥉"];
+          list.innerHTML = sorted.map((s, i) => `
         <div class="rank-item">
           <span class="rank-num">${medals[i] || (i + 1)}</span>
           <div style="flex:1;">
@@ -619,216 +931,216 @@ async function loadSummary() {
           <span class="rank-tot">${s.total}pt</span>
         </div>
       `).join("");
-      return;
-    }
-  } catch (err) {
-    console.warn("랭킹 불러오기 실패:", err);
-  }
-  list.innerHTML = '<div class="empty"><div class="empty-icon">🏅</div>아직 기록이 없어요</div>';
-}
-
-/* 연결 상태 확인 */
-async function checkConnection() {
-  const badge = document.getElementById("conn-badge");
-  try {
-    const res  = await fetch(SCRIPT_URL + "?action=load");
-    const data = await res.json();
-    if (data.result === "success") {
-      sheetOk = true;
-      badge.className = "status-badge ok";
-      badge.innerHTML = "✅ 구글 시트 연결됨";
-      // 시트 데이터로 로컬 동기화
-      const sheetRecs = await loadFromSheet();
-      if (sheetRecs && sheetRecs.length > recs.length) {
-        recs = sheetRecs;
-        totalPts = recs.reduce((s, r) => s + r.p, 0);
-        localStorage.setItem("eco-v3", JSON.stringify(recs));
-        renderRecs();
-        updateGarden();
+          return;
+        }
+      } catch (err) {
+        console.warn("랭킹 불러오기 실패:", err);
       }
-      loadSummary();
+      list.innerHTML = '<div class="empty"><div class="empty-icon">🏅</div>아직 기록이 없어요</div>';
     }
-  } catch (err) {
-    badge.className = "status-badge fail";
-    badge.innerHTML = "❌ 연결 실패 (로컬 모드로 동작)";
-  }
-}
 
-/* ============================================================
-   카테고리 & 셀렉트
-   ============================================================ */
-function setCat(cat) {
-  curCat = cat;
-  document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
-  document.getElementById("cb-" + cat).classList.add("active");
-  const desc = document.getElementById("cat-desc");
-  desc.textContent = cat === "all"
-    ? "🌍 전체 항목에서 선택하세요"
-    : CATS[cat].label + " — " + CATS[cat].desc;
-  fillSelect();
-}
+    /* 연결 상태 확인 */
+    async function checkConnection() {
+      const badge = document.getElementById("conn-badge");
+      try {
+        const res = await fetch(SCRIPT_URL + "?action=load");
+        const data = await res.json();
+        if (data.result === "success") {
+          sheetOk = true;
+          badge.className = "status-badge ok";
+          badge.innerHTML = "✅ 구글 시트 연결됨";
+          // 시트 데이터로 로컬 동기화
+          const sheetRecs = await loadFromSheet();
+          if (sheetRecs && sheetRecs.length > recs.length) {
+            recs = sheetRecs;
+            totalPts = recs.reduce((s, r) => s + r.p, 0);
+            localStorage.setItem("eco-v3", JSON.stringify(recs));
+            renderRecs();
+            updateGarden();
+          }
+          loadSummary();
+        }
+      } catch (err) {
+        badge.className = "status-badge fail";
+        badge.innerHTML = "❌ 연결 실패 (로컬 모드로 동작)";
+      }
+    }
 
-function fillSelect() {
-  const sel = document.getElementById("action-sel");
-  sel.innerHTML = '<option value="">실천 사례를 선택하세요</option>';
+    /* ============================================================
+       카테고리 & 셀렉트
+       ============================================================ */
+    function setCat(cat) {
+      curCat = cat;
+      document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+      document.getElementById("cb-" + cat).classList.add("active");
+      const desc = document.getElementById("cat-desc");
+      desc.textContent = cat === "all"
+        ? "🌍 전체 항목에서 선택하세요"
+        : CATS[cat].label + " — " + CATS[cat].desc;
+      fillSelect();
+    }
 
-  if (curCat !== "all") {
-    CATS[curCat].items.forEach((it, i) => {
-      const o = document.createElement("option");
-      o.value = i;
-      o.textContent = `${it.e} ${it.l}  (+${it.p}pt)`;
-      sel.appendChild(o);
-    });
-  } else {
-    Object.entries(CATS).forEach(([key, cat]) => {
-      const grp = document.createElement("optgroup");
-      grp.label = cat.label;
-      cat.items.forEach((it, i) => {
-        const o = document.createElement("option");
-        o.value = key + "|" + i;
-        o.textContent = `${it.e} ${it.l}  (+${it.p}pt)`;
-        grp.appendChild(o);
-      });
-      sel.appendChild(grp);
-    });
-  }
-}
+    function fillSelect() {
+      const sel = document.getElementById("action-sel");
+      sel.innerHTML = '<option value="">실천 사례를 선택하세요</option>';
 
-function getSelected() {
-  const v = document.getElementById("action-sel").value;
-  if (!v) return null;
-  if (v.includes("|")) {
-    const [key, i] = v.split("|");
-    return { ...CATS[key].items[+i], cat: key };
-  }
-  return { ...CATS[curCat].items[+v], cat: curCat };
-}
+      if (curCat !== "all") {
+        CATS[curCat].items.forEach((it, i) => {
+          const o = document.createElement("option");
+          o.value = i;
+          o.textContent = `${it.e} ${it.l}  (+${it.p}pt)`;
+          sel.appendChild(o);
+        });
+      } else {
+        Object.entries(CATS).forEach(([key, cat]) => {
+          const grp = document.createElement("optgroup");
+          grp.label = cat.label;
+          cat.items.forEach((it, i) => {
+            const o = document.createElement("option");
+            o.value = key + "|" + i;
+            o.textContent = `${it.e} ${it.l}  (+${it.p}pt)`;
+            grp.appendChild(o);
+          });
+          sel.appendChild(grp);
+        });
+      }
+    }
 
-/* ============================================================
-   기록하기
-   ============================================================ */
-async function doRecord() {
-  const name = document.getElementById("name-input").value.trim();
-  const it   = getSelected();
-  if (!name) { alert("이름을 입력해주세요!"); return; }
-  if (!it)   { alert("실천 항목을 선택해주세요!"); return; }
+    function getSelected() {
+      const v = document.getElementById("action-sel").value;
+      if (!v) return null;
+      if (v.includes("|")) {
+        const [key, i] = v.split("|");
+        return { ...CATS[key].items[+i], cat: key };
+      }
+      return { ...CATS[curCat].items[+v], cat: curCat };
+    }
 
-  const btn = document.getElementById("rec-btn");
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span> 저장 중...';
+    /* ============================================================
+       기록하기
+       ============================================================ */
+    async function doRecord() {
+      const name = document.getElementById("name-input").value.trim();
+      const it = getSelected();
+      if (!name) { alert("이름을 입력해주세요!"); return; }
+      if (!it) { alert("실천 항목을 선택해주세요!"); return; }
 
-  const now = new Date();
-  const rec = {
-    date: now.toISOString().slice(0, 10),
-    time: now.toTimeString().slice(0, 5),
-    name, cat: it.cat || curCat,
-    l: it.l, p: it.p, e: it.e
-  };
+      const btn = document.getElementById("rec-btn");
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> 저장 중...';
 
-  // 로컬 저장
-  recs.push(rec);
-  totalPts += it.p;
-  localStorage.setItem("eco-v3", JSON.stringify(recs));
+      const now = new Date();
+      const rec = {
+        date: now.toISOString().slice(0, 10),
+        time: now.toTimeString().slice(0, 5),
+        name, cat: it.cat || curCat,
+        l: it.l, p: it.p, e: it.e
+      };
 
-  // 구글 시트 저장
-  await saveToSheet(rec);
+      // 로컬 저장
+      recs.push(rec);
+      totalPts += it.p;
+      localStorage.setItem("eco-v3", JSON.stringify(recs));
 
-  // 파티클
-  const emojis = ["🌱","💧","✨","🌿","⭐","🌳","🌍"];
-  for (let i = 0; i < 6; i++) {
-    setTimeout(() => spawnPt(emojis[Math.floor(Math.random() * emojis.length)]), i * 110);
-  }
+      // 구글 시트 저장
+      await saveToSheet(rec);
 
-  document.getElementById("action-sel").value = "";
-  btn.disabled = false;
-  btn.innerHTML = "기록하기 🌱";
+      // 파티클
+      const emojis = ["🌱", "💧", "✨", "🌿", "⭐", "🌳", "🌍"];
+      for (let i = 0; i < 6; i++) {
+        setTimeout(() => spawnPt(emojis[Math.floor(Math.random() * emojis.length)]), i * 110);
+      }
 
-  renderRecs();
-  updateGarden();
+      document.getElementById("action-sel").value = "";
+      btn.disabled = false;
+      btn.innerHTML = "기록하기 🌱";
 
-  // 랭킹 갱신 (약간 지연)
-  setTimeout(loadSummary, 1500);
-}
+      renderRecs();
+      updateGarden();
 
-/* ============================================================
-   정원 / 레벨 업데이트
-   ============================================================ */
-function getLv(pts) {
-  for (let i = LEVELS.length - 1; i >= 0; i--)
-    if (pts >= LEVELS[i].min) return { lv: i, ...LEVELS[i] };
-  return { lv: 0, ...LEVELS[0] };
-}
-function getPlants(pts) {
-  const keys = Object.keys(PLANTS).map(Number).sort((a, b) => a - b);
-  let ch = PLANTS[0];
-  for (const k of keys) if (pts >= k) ch = PLANTS[k];
-  return ch;
-}
+      // 랭킹 갱신 (약간 지연)
+      setTimeout(loadSummary, 1500);
+    }
 
-function updateGarden() {
-  const lv     = getLv(totalPts);
-  const nextLv = LEVELS[Math.min(lv.lv + 1, LEVELS.length - 1)];
-  const toNext = Math.max(0, nextLv.min - totalPts);
-  const pct    = lv.lv === LEVELS.length - 1 ? 100
-    : Math.min(100, Math.round((totalPts - lv.min) / (nextLv.min - lv.min) * 100));
+    /* ============================================================
+       정원 / 레벨 업데이트
+       ============================================================ */
+    function getLv(pts) {
+      for (let i = LEVELS.length - 1; i >= 0; i--)
+        if (pts >= LEVELS[i].min) return { lv: i, ...LEVELS[i] };
+      return { lv: 0, ...LEVELS[0] };
+    }
+    function getPlants(pts) {
+      const keys = Object.keys(PLANTS).map(Number).sort((a, b) => a - b);
+      let ch = PLANTS[0];
+      for (const k of keys) if (pts >= k) ch = PLANTS[k];
+      return ch;
+    }
 
-  document.getElementById("total-pts").textContent  = totalPts + " 포인트";
-  document.getElementById("stat-cnt").textContent    = recs.length;
-  document.getElementById("level-badge").textContent = lv.badge + " " + lv.name;
-  document.getElementById("next-pts").textContent    = toNext > 0 ? toNext + " 포인트 더 필요" : "최고 레벨! 🎉";
-  document.getElementById("prog-bar").style.width    = pct + "%";
-  document.getElementById("stat-streak").textContent = calcStreak();
+    function updateGarden() {
+      const lv = getLv(totalPts);
+      const nextLv = LEVELS[Math.min(lv.lv + 1, LEVELS.length - 1)];
+      const toNext = Math.max(0, nextLv.min - totalPts);
+      const pct = lv.lv === LEVELS.length - 1 ? 100
+        : Math.min(100, Math.round((totalPts - lv.min) / (nextLv.min - lv.min) * 100));
 
-  const sun = document.getElementById("sun");
-  sun.style.opacity = Math.min(1, 0.3 + totalPts / 300);
-  sun.style.width   = Math.min(46, 22 + totalPts / 50) + "px";
-  sun.style.height  = sun.style.width;
+      document.getElementById("total-pts").textContent = totalPts + " 포인트";
+      document.getElementById("stat-cnt").textContent = recs.length;
+      document.getElementById("level-badge").textContent = lv.badge + " " + lv.name;
+      document.getElementById("next-pts").textContent = toNext > 0 ? toNext + " 포인트 더 필요" : "최고 레벨! 🎉";
+      document.getElementById("prog-bar").style.width = pct + "%";
+      document.getElementById("stat-streak").textContent = calcStreak();
 
-  document.getElementById("cloud2").style.opacity  = totalPts >= 80  ? "0.7" : "0";
-  document.getElementById("bird1").style.opacity   = totalPts >= 150 ? "0.9" : "0";
-  document.getElementById("rainbow").style.opacity = totalPts >= 400 ? "0.7" : "0";
+      const sun = document.getElementById("sun");
+      sun.style.opacity = Math.min(1, 0.3 + totalPts / 300);
+      sun.style.width = Math.min(46, 22 + totalPts / 50) + "px";
+      sun.style.height = sun.style.width;
 
-  const pc = document.getElementById("plants");
-  pc.innerHTML = "";
-  getPlants(totalPts).forEach((p, i) => {
-    const sz = 14 + Math.min(20, Math.floor(i % 3) * 3 + Math.floor(totalPts / 60) * 2);
-    const sp = document.createElement("span");
-    sp.style.cssText = `font-size:${sz}px;display:inline-block;
+      document.getElementById("cloud2").style.opacity = totalPts >= 80 ? "0.7" : "0";
+      document.getElementById("bird1").style.opacity = totalPts >= 150 ? "0.9" : "0";
+      document.getElementById("rainbow").style.opacity = totalPts >= 400 ? "0.7" : "0";
+
+      const pc = document.getElementById("plants");
+      pc.innerHTML = "";
+      getPlants(totalPts).forEach((p, i) => {
+        const sz = 14 + Math.min(20, Math.floor(i % 3) * 3 + Math.floor(totalPts / 60) * 2);
+        const sp = document.createElement("span");
+        sp.style.cssText = `font-size:${sz}px;display:inline-block;
       animation:bounce ${1.1 + i * 0.18}s ease-in-out ${i * 0.08}s infinite`;
-    sp.textContent = p;
-    pc.appendChild(sp);
-  });
-}
+        sp.textContent = p;
+        pc.appendChild(sp);
+      });
+    }
 
-/* ============================================================
-   연속 실천일 계산
-   ============================================================ */
-function getPrev(d) {
-  const dt = new Date(d); dt.setDate(dt.getDate() - 1);
-  return dt.toISOString().slice(0, 10);
-}
-function calcStreak() {
-  if (!recs.length) return 0;
-  const dates = [...new Set(recs.map(r => r.date))].sort().reverse();
-  const today = new Date().toISOString().slice(0, 10);
-  if (dates[0] !== today && dates[0] !== getPrev(today)) return 0;
-  let s = 1, prev = dates[0];
-  for (let i = 1; i < dates.length; i++) {
-    if (dates[i] === getPrev(prev)) { s++; prev = dates[i]; } else break;
-  }
-  return s;
-}
+    /* ============================================================
+       연속 실천일 계산
+       ============================================================ */
+    function getPrev(d) {
+      const dt = new Date(d); dt.setDate(dt.getDate() - 1);
+      return dt.toISOString().slice(0, 10);
+    }
+    function calcStreak() {
+      if (!recs.length) return 0;
+      const dates = [...new Set(recs.map(r => r.date))].sort().reverse();
+      const today = new Date().toISOString().slice(0, 10);
+      if (dates[0] !== today && dates[0] !== getPrev(today)) return 0;
+      let s = 1, prev = dates[0];
+      for (let i = 1; i < dates.length; i++) {
+        if (dates[i] === getPrev(prev)) { s++; prev = dates[i]; } else break;
+      }
+      return s;
+    }
 
-/* ============================================================
-   기록 렌더링
-   ============================================================ */
-function renderRecs() {
-  const el = document.getElementById("rec-list");
-  if (!recs.length) {
-    el.innerHTML = '<div class="empty"><div class="empty-icon">🌱</div>첫 번째 실천을 기록해보세요!</div>';
-    return;
-  }
-  el.innerHTML = [...recs].reverse().slice(0, 30).map(r => `
+    /* ============================================================
+       기록 렌더링
+       ============================================================ */
+    function renderRecs() {
+      const el = document.getElementById("rec-list");
+      if (!recs.length) {
+        el.innerHTML = '<div class="empty"><div class="empty-icon">🌱</div>첫 번째 실천을 기록해보세요!</div>';
+        return;
+      }
+      el.innerHTML = [...recs].reverse().slice(0, 30).map(r => `
     <div class="rec-item">
       <span class="rec-emoji">${r.e}</span>
       <div class="rec-info">
@@ -838,51 +1150,52 @@ function renderRecs() {
       <span class="rec-pts">+${r.p}pt</span>
     </div>
   `).join("");
-}
+    }
 
-/* ============================================================
-   파티클 이펙트
-   ============================================================ */
-function spawnPt(emoji) {
-  const c  = document.getElementById("particles");
-  const el = document.createElement("span");
-  el.textContent = emoji;
-  el.style.cssText = `position:absolute;font-size:15px;
+    /* ============================================================
+       파티클 이펙트
+       ============================================================ */
+    function spawnPt(emoji) {
+      const c = document.getElementById("particles");
+      const el = document.createElement("span");
+      el.textContent = emoji;
+      el.style.cssText = `position:absolute;font-size:15px;
     left:${15 + Math.random() * 70}%;bottom:45px;
     animation:float-up 1.3s ease forwards;pointer-events:none;`;
-  c.appendChild(el);
-  setTimeout(() => el.remove(), 1400);
-}
+      c.appendChild(el);
+      setTimeout(() => el.remove(), 1400);
+    }
 
-/* ============================================================
-   기타 액션
-   ============================================================ */
-async function refreshRecords() {
-  if (!sheetOk) { alert("구글 시트가 연결되지 않았어요."); return; }
-  const sheetRecs = await loadFromSheet();
-  if (sheetRecs) {
-    recs = sheetRecs;
-    totalPts = recs.reduce((s, r) => s + r.p, 0);
-    localStorage.setItem("eco-v3", JSON.stringify(recs));
-    renderRecs();
+    /* ============================================================
+       기타 액션
+       ============================================================ */
+    async function refreshRecords() {
+      if (!sheetOk) { alert("구글 시트가 연결되지 않았어요."); return; }
+      const sheetRecs = await loadFromSheet();
+      if (sheetRecs) {
+        recs = sheetRecs;
+        totalPts = recs.reduce((s, r) => s + r.p, 0);
+        localStorage.setItem("eco-v3", JSON.stringify(recs));
+        renderRecs();
+        updateGarden();
+      }
+    }
+
+    function clearLocal() {
+      if (!confirm("로컬 기록을 초기화할까요?\n(구글 시트 데이터는 유지됩니다)")) return;
+      recs = []; totalPts = 0;
+      localStorage.removeItem("eco-v3");
+      renderRecs(); updateGarden();
+    }
+
+    /* ============================================================
+       초기화
+       ============================================================ */
+    fillSelect();
     updateGarden();
-  }
-}
-
-function clearLocal() {
-  if (!confirm("로컬 기록을 초기화할까요?\n(구글 시트 데이터는 유지됩니다)")) return;
-  recs = []; totalPts = 0;
-  localStorage.removeItem("eco-v3");
-  renderRecs(); updateGarden();
-}
-
-/* ============================================================
-   초기화
-   ============================================================ */
-fillSelect();
-updateGarden();
-renderRecs();
-checkConnection();   // 구글 시트 연결 확인
-</script>
+    renderRecs();
+    checkConnection();   // 구글 시트 연결 확인
+  </script>
 </body>
+
 </html>
