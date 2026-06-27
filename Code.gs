@@ -27,7 +27,7 @@ function doGet(e) {
 
   // action 있으면 → 데이터 API
   try {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const ss = SpreadsheetApp.openById("1o1Ng06UJTIzyvmn3AlCmHNUKlgNUMgN5gX2QP747S-Q");
 
     if (action === "load") {
       const sheet = ss.getSheetByName(SHEET_NAME);
@@ -80,7 +80,7 @@ function doPost(e) {
       return jsonResponse({ result: "error", message: "필수 데이터 누락" });
     }
 
-    const ss    = SpreadsheetApp.getActiveSpreadsheet();
+    const ss    = SpreadsheetApp.openById("1o1Ng06UJTIzyvmn3AlCmHNUKlgNUMgN5gX2QP747S-Q");
     const sheet = getOrCreateSheet(ss, SHEET_NAME, [
       "날짜", "시간", "이름", "카테고리", "실천항목", "포인트", "이모지"
     ]);
@@ -167,7 +167,7 @@ function jsonResponse(obj) {
 
 // ─── 테스트 함수 ──────────────────────────────────
 function testSave() {
-  const ss    = SpreadsheetApp.getActiveSpreadsheet();
+  const ss    = SpreadsheetApp.openById("1o1Ng06UJTIzyvmn3AlCmHNUKlgNUMgN5gX2QP747S-Q");
   const sheet = getOrCreateSheet(ss, SHEET_NAME, [
     "날짜", "시간", "이름", "카테고리", "실천항목", "포인트", "이모지"
   ]);
