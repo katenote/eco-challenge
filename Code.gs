@@ -3,26 +3,23 @@
  * ================================================
  * [사용 방법]
  * 1. Apps Script 에디터에서 이 파일을 Code.gs에 붙여넣기
- * 2. 새 파일(HTML) 추가 → 이름: index → index.html에 프론트엔드 붙여넣기
- * 3. 배포 → 새 배포 → 웹 앱
+ * 2. 배포 → 새 배포 → 웹 앱
  *    - 다음 사용자로 실행: 나(본인)
  *    - 액세스 권한: 모든 사용자
- * 4. 배포 URL로 학생들이 바로 접속 가능!
+ * 3. 배포 후 받은 '웹 앱 URL'을 깃허브의 index.html에 붙여넣기!
  */
 
 const SHEET_NAME   = "에코기록";
 const SUMMARY_NAME = "학생별요약";
 
 
-// ─── HTML 페이지 반환 ────────────────────────────
+// ─── API 엔드포인트 ────────────────────────────
 function doGet(e) {
   const action = e.parameter.action;
 
-  // action 없으면 → 웹 페이지 반환
+  // action 없으면 → 안내 메시지 반환 (HTML 불필요)
   if (!action) {
-    return HtmlService.createHtmlOutputFromFile('index')
-      .setTitle('🌍 에코 챌린지')
-      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+    return ContentService.createTextOutput("에코 챌린지 백엔드 API가 정상 작동 중입니다. 프론트엔드는 깃허브 페이지를 이용해 주세요.");
   }
 
   // action 있으면 → 데이터 API
